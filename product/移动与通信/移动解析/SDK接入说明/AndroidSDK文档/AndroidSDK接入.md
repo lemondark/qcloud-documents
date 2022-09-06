@@ -52,6 +52,9 @@ dependencies {
     // ...
 
     implementation(name: 'HTTPDNS_Android_xxxx', ext: 'aar')
+
+    // V4.3.0版本开始增加了本地数据存储，需增加room依赖引入
+    implementation 'android.arch.persistence.room:rxjava2:2.1.1'
 }
 ```
 
@@ -135,8 +138,8 @@ MSDKDnsResolver.getInstance().WGSetDnsOpenId("10000");
 - 可以通过配置setUseExpiredIpEnable(true)和setCachedIpEnable(true)来实现乐观 DNS 缓存。
 	1. 该功能旨在提升缓存命中率和首屏加载速度。持久化缓存会将上一次解析结果保持在本地，在APP启动时，会优先读取到本地缓存解析结果。
 	2. 存在使用缓存IP时为过期IP（TTL过期），该功能启用了允许使用过期IP，乐观的推定TTL过期，大多数情况下该IP仍能正常使用。优先返回缓存的过期结果，同时异步发起解析服务，更新缓存。
-	3. 乐观 DNS 缓存在首次解析域名（无缓存）时，无法命中缓存，返回0;0，同时也会异步发起解析服务，更新缓存。在启用该功能后需自行LocalDNS兜底。核心域名建议配置预解析服务（preLookupDomains）。
-	4. 如果业务服务器IP变化比较频繁，务必启用缓存自动刷新（persistentCacheDomains）、预解析能力（preLookupDomains），以确保解析结果的准确性。
+	3. 乐观 DNS 缓存在首次解析域名（无缓存）时，无法命中缓存，返回0;0，同时也会异步发起解析服务，更新缓存。在启用该功能后需自行LocalDNS兜底。核心域名建议配置预解析服务preLookupDomains(String... domainList)。
+	4. 如果业务服务器IP变化比较频繁，务必启用缓存自动刷新persistentCacheDomains(String... domainList)、预解析能力preLookupDomains(String... domainList)，以确保解析结果的准确性。
 </dx-alert>
 在获取服务实例之前，可通过初始化配置，设置服务的一些属性在 SDK 初始化时进行配置项传入。
 ```Java
